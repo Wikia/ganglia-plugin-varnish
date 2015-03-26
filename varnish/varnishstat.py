@@ -1,5 +1,5 @@
 import subprocess
-import lxml.etree
+import json
 
 import metrics
 
@@ -42,22 +42,22 @@ class Varnishstat (object):
         return m
 
     def read_metrics(self):
-        '''Read XML output from varnishstat and parse it 
-        with lxml.etree.'''
+        '''Read JSON output from varnishstat and parse it 
+        with json.'''
 
-        p = subprocess.Popen([self.vspath, '-1', '-x'],
+        p = subprocess.Popen([self.vspath, '-1', '-j'],
             stdout=subprocess.PIPE)
         output = p.communicate()[0]
 
-        doc = lxml.etree.fromstring(output)
-        for stat in doc.xpath('/varnishstat/stat'):
-            name = stat.xpath('name')[0].text
-            value = stat.xpath('value')[0].text
+        doc = json.loads(output)
+        for stat in doc:
+            name = stat
+            value = doc[stat]["value"]
             yield(name, int(value))
 
 if __name__ == '__main__':
 
-    v = VarnishStat()
+    v = Varnishstat()
 
 # vim: set ts=4 sw=4 expandtab ai :
 
