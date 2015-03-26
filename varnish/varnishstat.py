@@ -51,9 +51,12 @@ class Varnishstat (object):
 
         doc = json.loads(output)
         for stat in doc:
-            name = stat
-            value = doc[stat]["value"]
-            yield(name, int(value))
+            try:
+                name = stat
+                value = doc[stat]["value"]
+                yield(name, int(value))
+            except:
+                continue
 
 if __name__ == '__main__':
 
