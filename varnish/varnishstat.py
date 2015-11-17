@@ -29,13 +29,14 @@ class Varnishstat (object):
             stdout=subprocess.PIPE)
 
         for line in iter(p.stdout.readline, b''):
-            name, val, avg, desc = line.strip().split(None, 3)
-            if name in forced_metrics:
-                m.append((name, desc, forced_metrics[name]))
-            elif avg == '.':
-                m.append((name, desc, m_count))
-            else:
-                m.append((name, desc, m_rate))
+            if line.strip() != '':
+              name, val, avg, desc = line.strip().split(None, 3)
+              if name in forced_metrics:
+                  m.append((name, desc, forced_metrics[name]))
+              elif avg == '.':
+                  m.append((name, desc, m_count))
+              else:
+                  m.append((name, desc, m_rate))
 
         p.communicate()
 
