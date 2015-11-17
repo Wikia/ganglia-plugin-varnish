@@ -3,6 +3,8 @@
 import os
 import sys
 import optparse
+
+sys.path.remove('/usr/lib/ganglia/python_modules')
 import varnish.stats
 
 CONFIG_TEMPLATE = '''
